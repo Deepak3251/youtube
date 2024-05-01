@@ -297,10 +297,11 @@ class Module extends BaseModule {
 		if ( ! $app->is_connected() ) {
 			throw new \Exception( 'not_connected' );
 		}
-		$request_ids = $this->get_request_ids( $data['payload'] );
 
-		$result = $app->get_image_prompt_enhanced( $data['prompt'], [], $request_ids );
-		$this->throw_on_error( $result );
+		$result = $app->get_image_prompt_enhanced( $data['prompt'] );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'],
@@ -327,7 +328,9 @@ class Module extends BaseModule {
 		$request_ids = $this->get_request_ids( $data['payload'] );
 
 		$result = $app->get_completion_text( $data['payload']['prompt'], $context, $request_ids );
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'],
@@ -378,7 +381,9 @@ class Module extends BaseModule {
 		$request_ids = $this->get_request_ids( $data['payload'] );
 
 		$result = $app->get_edit_text( $data, $context, $request_ids );
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'],
@@ -407,7 +412,9 @@ class Module extends BaseModule {
 		$request_ids = $this->get_request_ids( $data['payload'] );
 
 		$result = $app->get_custom_code( $data, $context, $request_ids );
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'],
@@ -441,7 +448,9 @@ class Module extends BaseModule {
 		$request_ids = $this->get_request_ids( $data['payload'] );
 
 		$result = $app->get_custom_css( $data, $context, $request_ids );
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'],
@@ -494,7 +503,9 @@ class Module extends BaseModule {
 
 		$result = $app->get_text_to_image( $data, $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -533,7 +544,9 @@ class Module extends BaseModule {
 			'attachment_id' => $data['payload']['image']['id'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -567,7 +580,9 @@ class Module extends BaseModule {
 			'attachment_id' => $data['payload']['image']['id'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -601,7 +616,9 @@ class Module extends BaseModule {
 			'prompt' => $data['payload']['prompt'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -629,7 +646,9 @@ class Module extends BaseModule {
 			'attachment_id' => $data['payload']['image']['id'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -673,7 +692,9 @@ class Module extends BaseModule {
 			'mask' => $data['payload']['mask'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -705,7 +726,9 @@ class Module extends BaseModule {
 			'mask' => $data['payload']['mask'],
 		], $context, $request_ids );
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'images' => $result['images'],
@@ -764,10 +787,9 @@ class Module extends BaseModule {
 
 			if ( is_array( $message ) ) {
 				$message = implode( ', ', $message );
-				throw new \Exception( $message );
 			}
 
-			$this->throw_on_error( $result );
+			throw new \Exception( $message );
 		}
 
 		$elements = $result['text']['elements'] ?? [];
@@ -832,7 +854,9 @@ class Module extends BaseModule {
 			$this->prepare_generate_layout_context()
 		);
 
-		$this->throw_on_error( $result );
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
 
 		return [
 			'text' => $result['text'] ?? $data['prompt'],
@@ -996,17 +1020,5 @@ class Module extends BaseModule {
 		}
 
 		return [];
-	}
-
-	/**
-	 * @param mixed $result
-	 */
-	private function throw_on_error( $result ): void {
-		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( [
-				'message' => $result->get_error_message(),
-				'extra_data' => $result->get_error_data(),
-			] );
-		}
 	}
 }

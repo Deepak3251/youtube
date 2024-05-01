@@ -46,18 +46,8 @@ class Hints {
 				self::CAPABILITY => 'install_plugins',
 				self::DEFINED => 'IMAGE_OPTIMIZATION_VERSION',
 			],
-			'image-optimization-once-media-modal' => [
-				self::DISMISSED => 'image-optimization-once-media-modal',
-				self::CAPABILITY => 'install_plugins',
-				self::DEFINED => 'IMAGE_OPTIMIZATION_VERSION',
-			],
 			'image-optimization' => [
 				self::DISMISSED => 'image_optimizer_hint',
-				self::CAPABILITY => 'install_plugins',
-				self::DEFINED => 'IMAGE_OPTIMIZATION_VERSION',
-			],
-			'image-optimization-media-modal' => [
-				self::DISMISSED => 'image-optimization-media-modal',
 				self::CAPABILITY => 'install_plugins',
 				self::DEFINED => 'IMAGE_OPTIMIZATION_VERSION',
 			],

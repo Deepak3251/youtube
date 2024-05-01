@@ -19,6 +19,12 @@ class Module extends BaseModule {
 		return 'nested-accordion';
 	}
 
+	public function get_widgets() {
+		return [
+			'Nested_Accordion',
+		];
+	}
+
 	public function __construct() {
 		parent::__construct();
 
